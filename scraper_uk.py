@@ -27,19 +27,69 @@ except Exception:
 from scraper_core import run_scraper
 
 BASE_QUERIES = [
+    # ── Building & Home ───────────────────────────────────────────
     "plumber", "electrician", "air conditioning installation",
     "solar panels installation", "renovation company",
     "carpenter joinery", "painter decorator", "tiler",
-    "locksmith", "roofer", "office cleaning", "home cleaning",
-    "removal company", "upholstery cleaning", "computer repair",
-    "phone repair", "appliance repair", "language school",
-    "private tutor", "driving school", "massage parlour",
-    "beauty salon", "tattoo studio", "photographer",
-    "certified translator", "accounting services",
+    "locksmith", "roofer",
+    # ── Cleaning & Logistics ──────────────────────────────────────
+    "office cleaning company", "domestic cleaning service",
+    "removal company", "upholstery carpet cleaning",
+    # ── Tech Repair ───────────────────────────────────────────────
+    "computer repair", "phone repair", "appliance repair",
+    # ── Hair & Beauty ─────────────────────────────────────────────
+    "hairdresser barbershop",
+    "beauty salon nail bar",
+    "eyelash extension studio",
+    "massage therapy spa",
+    "laser hair removal studio",
+    # ── Health & Wellness ─────────────────────────────────────────
+    "private dental clinic",
+    "physiotherapy rehabilitation clinic",
+    "nutritionist dietitian clinic",
+    "private medical centre",
+    # ── Fitness & Sport ───────────────────────────────────────────
+    "gym fitness club",
+    "personal trainer",
+    "yoga pilates studio",
+    "dance studio",
+    "martial arts school",
+    # ── Education ─────────────────────────────────────────────────
+    "language school", "driving school",
+    "private tutor tutoring",
+    "private nursery day care",
+    # ── Automotive ────────────────────────────────────────────────
+    "car garage MOT service",
+    "car detailing valeting",
+    # ── Pets ──────────────────────────────────────────────────────
+    "veterinary practice clinic",
+    "dog grooming parlour",
+    "pet boarding kennels",
+    # ── Events & Creative ─────────────────────────────────────────
+    "wedding photographer studio",
+    "videographer wedding",
+    "catering company events",
+    "DJ wedding entertainment",
+    # ── Design & Garden ───────────────────────────────────────────
+    "interior designer decorator",
+    "landscaping garden maintenance",
+    # ── Professional Services ─────────────────────────────────────
+    "accounting services bookkeeper",
+    "certified translator interpreting",
+    "tattoo studio",
+    "photographer portrait",
 ]
 
 DISTRICT_NICHES = [
-    "plumber", "electrician", "renovation", "painter decorator", "cleaning",
+    # Trades
+    "plumber", "electrician", "renovation", "painter decorator",
+    # Services
+    "cleaning", "car garage",
+    # Beauty & Health
+    "hairdresser", "beauty salon", "gym fitness",
+    "dentist", "physiotherapy",
+    # Pets & Education
+    "vet", "language school",
 ]
 
 REGIONS = {

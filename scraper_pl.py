@@ -27,18 +27,68 @@ except Exception:
 from scraper_core import run_scraper
 
 BASE_QUERIES = [
+    # ── Budowlanka & Dom ──────────────────────────────────────────
     "hydraulik", "elektryk", "instalacje klimatyzacji",
     "instalacje solarne fotowoltaika", "firma remontowa",
     "stolarz na wymiar", "malarz pokojowy", "glazurnik kafelkarz",
-    "sluszarz", "dekarz", "sprzatanie biur", "sprzatanie mieszkan",
-    "przeprowadzki", "pranie tapicerek", "serwis komputerowy",
-    "naprawa telefonow", "naprawa AGD", "szkola jezykowa",
-    "korepetycje", "nauka jazdy", "gabinet masazu", "kosmetyczka",
-    "tatuaz studio", "fotograf", "tlumacz przysiegy", "uslugi ksiegowe",
+    "sluszarz", "dekarz",
+    # ── Sprzatanie & Logistyka ────────────────────────────────────
+    "sprzatanie biur", "sprzatanie mieszkan",
+    "przeprowadzki", "pranie tapicerek",
+    # ── Serwis tech ──────────────────────────────────────────────
+    "serwis komputerowy", "naprawa telefonow", "naprawa AGD",
+    # ── Uroda & Cialo ─────────────────────────────────────────────
+    "salon fryzjerski", "barber shop",
+    "kosmetyczka salon urody", "paznokcie manicure salon",
+    "gabinet masazu", "studio depilacji laser",
+    "studio rzesy przedluzanie",
+    # ── Zdrowie & Medycyna ────────────────────────────────────────
+    "gabinet stomatologiczny klinika",
+    "fizjoterapia rehabilitacja",
+    "dietetyk poradnia",
+    "centrum medyczne prywatne",
+    # ── Fitness & Sport ───────────────────────────────────────────
+    "klub fitness silownia",
+    "trener personalny",
+    "studio jogi pilates",
+    "szkola tanca",
+    "szkola sztuk walki",
+    # ── Edukacja ─────────────────────────────────────────────────
+    "szkola jezykowa", "nauka jazdy",
+    "korepetycje",
+    "przedszkole prywatne",
+    # ── Motoryzacja ───────────────────────────────────────────────
+    "warsztat samochodowy serwis",
+    "auto detailing polerowanie",
+    # ── Zwierzeta ─────────────────────────────────────────────────
+    "klinika weterynaryjna",
+    "groomer pielegnacja psow",
+    "hotel dla zwierzat",
+    # ── Events & Kreacja ──────────────────────────────────────────
+    "fotograf slubny studio",
+    "kamerzysta wideofilmowanie",
+    "firma cateringowa",
+    "dj muzyk weselny",
+    # ── Projektowanie & Ogrod ─────────────────────────────────────
+    "projektant wnetrz architekt",
+    "firma ogrodnicza uslug ogrodniczych",
+    # ── Uslugi profesjonalne ──────────────────────────────────────
+    "uslugi ksiegowe biuro rachunkowe",
+    "tlumacz przysiegy biuro tlumaczen",
+    "fotograf",
+    "tatuaz studio",
 ]
 
 DISTRICT_NICHES = [
-    "hydraulik", "elektryk", "firma remontowa", "malarz pokojowy", "sprzatanie",
+    # Remontowe
+    "hydraulik", "elektryk", "firma remontowa", "malarz pokojowy",
+    # Uslugowe
+    "sprzatanie", "warsztat samochodowy",
+    # Beauty & Health
+    "salon fryzjerski", "kosmetyczka", "silownia fitness",
+    "dentysta", "fizjoterapia",
+    # Zwierzeta & Edukacja
+    "weterynarz", "szkola jezykowa",
 ]
 
 REGIONS = {

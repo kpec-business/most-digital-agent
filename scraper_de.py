@@ -28,18 +28,70 @@ except Exception:
 from scraper_core import run_scraper
 
 BASE_QUERIES = [
+    # ── Bau & Haus ────────────────────────────────────────────────
     "Klempner Sanitaer", "Elektriker", "Klimaanlage Installation",
     "Solaranlage Photovoltaik", "Renovierungsunternehmen",
     "Schreiner Tischler", "Maler Lackierer", "Fliesenleger",
-    "Schlosser", "Dachdecker", "Bueroreinigung", "Wohnungsreinigung",
-    "Umzugsunternehmen", "Polsterreinigung", "Computerreparatur",
-    "Handyreparatur", "Haushaltsgeraete Reparatur", "Sprachschule",
-    "Nachhilfe", "Fahrschule", "Massagesalon", "Kosmetikstudio",
-    "Tattoostudio", "Fotograf", "Steuerberater Buchhalter", "Uebersetzungsbuero",
+    "Schlosser", "Dachdecker",
+    # ── Reinigung & Logistik ──────────────────────────────────────
+    "Bueroreinigung Gebaeudereinigung",
+    "Wohnungsreinigung Haushaltshilfe",
+    "Umzugsunternehmen", "Polsterreinigung",
+    # ── Tech Reparatur ────────────────────────────────────────────
+    "Computerreparatur", "Handyreparatur", "Haushaltsgeraete Reparatur",
+    # ── Haare & Beauty ────────────────────────────────────────────
+    "Friseur Barbershop",
+    "Nagelstudio Kosmetiksalon",
+    "Wimpernverlaengerung Studio",
+    "Massagepraxis Wellnessstudio",
+    "Laser Haarentfernung Studio",
+    # ── Gesundheit ────────────────────────────────────────────────
+    "Zahnarzt Privatklinik",
+    "Physiotherapie Reha Praxis",
+    "Ernaehrungsberater Diaetologe",
+    "Privatarzt Gesundheitszentrum",
+    # ── Fitness & Sport ───────────────────────────────────────────
+    "Fitnessstudio Sportzentrum",
+    "Personal Trainer",
+    "Yoga Pilates Studio",
+    "Tanzschule",
+    "Kampfsportschule",
+    # ── Bildung ───────────────────────────────────────────────────
+    "Sprachschule Sprachkurs", "Fahrschule",
+    "Nachhilfe Lernstudio",
+    "Private Kindertagesstaette Kita",
+    # ── Automobil ─────────────────────────────────────────────────
+    "Autowerkstatt KFZ Service",
+    "Auto Aufbereitung Detailing",
+    # ── Tiere ─────────────────────────────────────────────────────
+    "Tieraerztliche Praxis",
+    "Hundesalon Tierpflege",
+    "Tierpension Hundepension",
+    # ── Events & Kreativ ──────────────────────────────────────────
+    "Hochzeitsfotograf Studio",
+    "Videograf Hochzeit",
+    "Cateringunternehmen",
+    "DJ Hochzeit Entertainment",
+    # ── Design & Garten ───────────────────────────────────────────
+    "Innenarchitekt Raumgestalter",
+    "Gartengestaltung Landschaftsbau",
+    # ── Profidienstleistungen ─────────────────────────────────────
+    "Steuerberater Buchhalter",
+    "Uebersetzungsbuero Dolmetscher",
+    "Tattoostudio",
+    "Fotograf Portrait",
 ]
 
 DISTRICT_NICHES = [
-    "Klempner", "Elektriker", "Renovierung", "Maler", "Reinigung",
+    # Handwerk
+    "Klempner", "Elektriker", "Renovierung", "Maler",
+    # Service
+    "Reinigung", "Autowerkstatt",
+    # Beauty & Gesundheit
+    "Friseur", "Kosmetikstudio", "Fitnessstudio",
+    "Zahnarzt", "Physiotherapie",
+    # Tiere & Bildung
+    "Tierarzt", "Sprachschule",
 ]
 
 REGIONS = {
