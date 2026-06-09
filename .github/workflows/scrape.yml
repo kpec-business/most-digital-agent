@@ -1,9 +1,12 @@
-name: Scraper Wroclaw
+name: Scraper Universalny
 
 on:
-  schedule:
-    - cron: '0 5 * * 1'
   workflow_dispatch:
+    inputs:
+      cities:
+        description: 'Regiony (wroclaw | lodz | wielkopolska | zielona_gora) oddzielone przecinkiem'
+        required: true
+        default: 'wroclaw'
 
 jobs:
   scrape:
@@ -28,4 +31,5 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           CI: true
           PYTHONUNBUFFERED: 1
-        run: python -u wroclaw.py
+          CITIES: ${{ inputs.cities }}
+        run: python -u scraper.py
