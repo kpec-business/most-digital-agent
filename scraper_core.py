@@ -4,6 +4,7 @@ Shared logic used by scraper_pl.py / scraper_uk.py / scraper_de.py
 """
 import asyncio
 import os
+import random
 
 from scrapers.maps import scrape_google_maps
 from scrapers.website import extract_contacts
@@ -84,6 +85,11 @@ async def run_scraper(region_keys: list, regions_config: dict,
     seen:    set[str]   = set()
 
     print(f"  Cel: {MAX_TOTAL} leadów na to uruchomienie")
+    base_queries = list(base_queries)
+    random.shuffle(base_queries)
+    district_niches = list(district_niches)
+    random.shuffle(district_niches)
+    print(f"  Kolejnosc zapytan: {base_queries[:5]}...")
 
     for region_key in region_keys:
         if MAX_TOTAL and len(all_biz) >= MAX_TOTAL:
