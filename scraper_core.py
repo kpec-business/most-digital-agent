@@ -7,7 +7,6 @@ import os
 import random
 
 from scrapers.maps import scrape_google_maps
-from scrapers.website import extract_contacts
 from output import save_to_excel
 from supabase_sync import sync_leads
 
@@ -20,19 +19,15 @@ PRIORITY_ORDER = {"GORACY": 0, "CIEPLY": 1, "POMIJAJ": 99}
 
 
 def classify(biz: dict) -> tuple[str, str]:
-    """Returns (priorytet, powod) — always uses PL labels so DB stays consistent."""
+    """Returns (priorytet, powod) — only GORACY (no website) collected."""
     has_website = bool(biz.get("website", "").strip())
-    try:
-        reviews = int(biz.get("reviews", "0") or "0")
-    except ValueError:
-        reviews = 0
+    has_phone   = bool(biz.get("phone", "").strip())
 
     if not has_website:
-        if reviews <= MAX_REVIEWS_HOT:
-            return "GORACY", "Brak strony, malo opinii"
-        return "GORACY", f"Brak strony ({reviews} opinii)"
-    if reviews <= MAX_REVIEWS_WARM:
-        return "CIEPLY", f"Strona + tylko {reviews} opinii"
+        reason = "Brak strony" + (", ma tel" if has_phone else ", brak tel")
+        return "GORACY", reason
+
+    # Ma stronę — pomijamy, nie jest naszym targetem
     return "POMIJAJ", ""
 
 
@@ -132,22 +127,8 @@ async def run_scraper(region_keys: list, regions_config: dict,
     print(f"\n{'=' * 62}")
     print(f"  Scraped: {len(all_biz)} | GORACY: {gorące} | CIEPLY: {cieple}")
 
-    with_site = [b for b in all_biz if b.get("website")]
-    print(f"\n  Wyciagam emaile z {len(with_site)} stron...")
-    for i, biz in enumerate(all_biz):
-        if not biz.get("website"):
-            continue
-        try:
-            contacts = extract_contacts(biz["website"])
-            biz.update(contacts)
-            if contacts.get("email"):
-                print(f"  [{i+1:>3}] {biz['name'][:38]:<38} {contacts['email']}")
-        except Exception:
-            pass
-
     out = save_to_excel(all_biz)
-    with_email = sum(1 for b in all_biz if b.get("email"))
-    with_phone = sum(1 for b in all_biz if b.get("phone") or b.get("phone_site"))
+    with_phone = sum(1 for b in all_biz if b.get("phone"))
 
     source = "_".join(region_keys) + "_batch"
     print(f"\n  Synchronizuje z Supabase (country={country})...")
@@ -164,11 +145,9 @@ async def run_scraper(region_keys: list, regions_config: dict,
     print(f"\n{'=' * 62}")
     print(f"  GOTOWE! Leady sa w bazie — kliknij 'Dystrybuuj' w panelu admina.")
     print(f"  Plik Excel:      {out}")
-    print(f"  Firm scraped:    {len(all_biz)}")
+    print(f"  Firm bez strony: {len(all_biz)}")
     print(f"  Nowe w Supabase: {n_new}")
     print(f"  GORACY:          {gorące}")
-    print(f"  CIEPLY:          {cieple}")
-    print(f"  Z emailem:       {with_email}")
     print(f"  Z telefonem:     {with_phone}")
     print(f"{'=' * 62}")
 
