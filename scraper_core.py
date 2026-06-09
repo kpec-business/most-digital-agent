@@ -13,6 +13,7 @@ from supabase_sync import sync_leads
 MAX_PER_QUERY    = 30
 MAX_REVIEWS_HOT  = 10
 MAX_REVIEWS_WARM = 50
+MAX_TOTAL        = int(os.environ.get("MAX_LEADS", 108))  # limit leadów na jedno uruchomienie
 
 PRIORITY_ORDER = {"GORACY": 0, "CIEPLY": 1, "POMIJAJ": 99}
 
@@ -34,9 +35,11 @@ def classify(biz: dict) -> tuple[str, str]:
     return "POMIJAJ", ""
 
 
-async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label: str):
+async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label: str, max_total: int = 0):
     total_q = len(queries)
     for qi, query in enumerate(queries, 1):
+        if max_total and len(all_biz) >= max_total:
+            break
         print(f"  [{label}] [{qi:>2}/{total_q}] '{query} {city}'...")
         try:
             results = await scrape_google_maps(query, city, MAX_PER_QUERY)
@@ -46,6 +49,8 @@ async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label:
 
         added = 0
         for biz in results:
+            if max_total and len(all_biz) >= max_total:
+                break
             key = f"{biz['name'].lower()}|{biz['address'].lower()}"
             if key in seen or not biz["name"]:
                 continue
@@ -59,7 +64,8 @@ async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label:
             all_biz.append(biz)
             added += 1
 
-        print(f"    +{added} | lacznie: {len(all_biz)}")
+        limit_info = f" ✓ LIMIT {max_total}" if (max_total and len(all_biz) >= max_total) else ""
+        print(f"    +{added} | lacznie: {len(all_biz)}{limit_info}")
 
 
 async def run_scraper(region_keys: list, regions_config: dict,
@@ -77,7 +83,11 @@ async def run_scraper(region_keys: list, regions_config: dict,
     all_biz: list[dict] = []
     seen:    set[str]   = set()
 
+    print(f"  Cel: {MAX_TOTAL} leadów na to uruchomienie")
+
     for region_key in region_keys:
+        if MAX_TOTAL and len(all_biz) >= MAX_TOTAL:
+            break
         if region_key not in regions_config:
             print(f"\n  [WARN] Nieznany region: '{region_key}'")
             print(f"  Dostepne: {', '.join(regions_config.keys())}")
@@ -89,6 +99,9 @@ async def run_scraper(region_keys: list, regions_config: dict,
         print(f"{'=' * 50}")
 
         for city_name, districts in region["cities"]:
+            if MAX_TOTAL and len(all_biz) >= MAX_TOTAL:
+                print(f"\n  ✓ Osiagnieto cel {MAX_TOTAL} leadów — kończę scraping")
+                break
             if districts:
                 queries = base_queries + [
                     f"{niche} {district}"
@@ -100,7 +113,7 @@ async def run_scraper(region_keys: list, regions_config: dict,
 
             lbl = city_name[:3].upper()
             print(f"\n>>> {city_name.upper()} ({len(queries)} zapytan)")
-            await scrape_city(city_name, queries, seen, all_biz, lbl)
+            await scrape_city(city_name, queries, seen, all_biz, lbl, max_total=MAX_TOTAL)
 
     all_biz.sort(key=lambda b: (
         PRIORITY_ORDER.get(b.get("priorytet", "POMIJAJ"), 99),
