@@ -36,9 +36,11 @@ def _client() -> Client:
     return _sb
 
 
-def sync_leads(leads: list[dict], city: str = "", source_query: str = "") -> int:
+def sync_leads(leads: list[dict], city: str = "", source_query: str = "",
+               country: str = "pl") -> int:
     """
     Insert new leads into Supabase and append to master CSV.
+    country: 'pl' | 'uk' | 'de'
     Returns number of records sent to Supabase.
     """
     if not leads:
@@ -72,6 +74,7 @@ def sync_leads(leads: list[dict], city: str = "", source_query: str = "") -> int
             "powod":        lead.get("powod", ""),
             "city":         city or lead.get("city", ""),
             "source_query": source_query or lead.get("source_query", ""),
+            "country":      country,
         })
 
     if records:

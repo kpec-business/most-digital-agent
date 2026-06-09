@@ -1,10 +1,10 @@
-name: Scraper Universalny
+name: Scraper Polska
 
 on:
   workflow_dispatch:
     inputs:
       cities:
-        description: 'Regiony (wroclaw | lodz | wielkopolska | zielona_gora) oddzielone przecinkiem'
+        description: 'Regiony PL (wroclaw | lodz | mazowieckie | malopolskie | slaskie | ...)'
         required: true
         default: 'wroclaw'
 
@@ -12,19 +12,15 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     timeout-minutes: 360
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           python -m playwright install --with-deps chromium
-
       - name: Run scraper
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -32,4 +28,4 @@ jobs:
           CI: true
           PYTHONUNBUFFERED: 1
           CITIES: ${{ inputs.cities }}
-        run: python -u scraper.py
+        run: python -u scraper_pl.py
