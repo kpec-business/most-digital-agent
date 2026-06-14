@@ -44,8 +44,10 @@ async def scrape_google_maps(query: str, location: str, max_results: int = 50) -
                 pass
 
         hrefs: list[str] = []
-        for _ in range(30):
-            if len(hrefs) >= max_results:
+        collect_limit = min(max_results * 2, 80)  # zbierz 2x więcej żeby mieć z czego odwrócić
+
+        for _ in range(50):
+            if len(hrefs) >= collect_limit:
                 break
 
             links = await page.locator('a[href*="/maps/place/"]').all()
@@ -69,11 +71,13 @@ async def scrape_google_maps(query: str, location: str, max_results: int = 50) -
             # End-of-results markers
             for end_text in ["Koniec wynikow", "You've reached the end", "wynikow na stronie"]:
                 if await page.locator(f"text='{end_text}'").count() > 0:
-                    hrefs = hrefs  # just break outer
                     break
 
+        # Odwróć — mniej popularne firmy (koniec listy) częściej nie mają stron
+        hrefs.reverse()
+
         await page.close()
-        print(f"  Zebrano {len(hrefs)} linkow do firm")
+        print(f"  Zebrano {len(hrefs)} linkow, odwiedzam od najmniej popularnych")
 
         # ── Phase 2: visit each place URL ─────────────────────────────────────
         results: list[dict] = []
