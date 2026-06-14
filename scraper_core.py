@@ -18,20 +18,32 @@ MAX_TOTAL        = int(os.environ.get("MAX_LEADS", 108))  # limit leadów na jed
 PRIORITY_ORDER = {"GORACY": 0, "CIEPLY": 1, "POMIJAJ": 99}
 
 
-def classify(biz: dict) -> tuple[str, str]:
-    """Returns (priorytet, powod) — only GORACY (no website) collected."""
+def classify(biz: dict, country: str = "pl") -> tuple[str, str]:
+    """
+    PL  — tylko bez strony (GORACY). Wiele PL firm nie ma stron.
+    UK/DE — bez strony = GORACY, mało opinii (≤30) = CIEPLY.
+           W rozwiniętych rynkach prawie każda firma ma stronę,
+           więc filtr "tylko bez strony" daje za mało leadów.
+    """
     has_website = bool(biz.get("website", "").strip())
     has_phone   = bool(biz.get("phone", "").strip())
+    try:
+        reviews = int(biz.get("reviews", "0") or "0")
+    except ValueError:
+        reviews = 0
 
     if not has_website:
         reason = "Brak strony" + (", ma tel" if has_phone else ", brak tel")
         return "GORACY", reason
 
-    # Ma stronę — pomijamy, nie jest naszym targetem
+    if country in ("uk", "de"):
+        if reviews <= 30:
+            return "CIEPLY", f"Strona + tylko {reviews} opinii"
+
     return "POMIJAJ", ""
 
 
-async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label: str, max_total: int = 0):
+async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label: str, max_total: int = 0, country: str = "pl"):
     total_q = len(queries)
     for qi, query in enumerate(queries, 1):
         if max_total and len(all_biz) >= max_total:
@@ -50,7 +62,7 @@ async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label:
             key = f"{biz['name'].lower()}|{biz['address'].lower()}"
             if key in seen or not biz["name"]:
                 continue
-            priorytet, powod = classify(biz)
+            priorytet, powod = classify(biz, country=country)
             if priorytet == "POMIJAJ":
                 continue
             seen.add(key)
@@ -114,7 +126,7 @@ async def run_scraper(region_keys: list, regions_config: dict,
 
             lbl = city_name[:3].upper()
             print(f"\n>>> {city_name.upper()} ({len(queries)} zapytan)")
-            await scrape_city(city_name, queries, seen, all_biz, lbl, max_total=MAX_TOTAL)
+            await scrape_city(city_name, queries, seen, all_biz, lbl, max_total=MAX_TOTAL, country=country)
 
     all_biz.sort(key=lambda b: (
         PRIORITY_ORDER.get(b.get("priorytet", "POMIJAJ"), 99),
