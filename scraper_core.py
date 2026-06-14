@@ -36,9 +36,9 @@ def classify(biz: dict, country: str = "pl") -> tuple[str, str]:
         reason = "Brak strony" + (", ma tel" if has_phone else ", brak tel")
         return "GORACY", reason
 
-    if country in ("uk", "de"):
-        if reviews <= 30:
-            return "CIEPLY", f"Strona + tylko {reviews} opinii"
+    warm_limit = 30 if country in ("uk", "de") else 10
+    if reviews <= warm_limit:
+        return "CIEPLY", f"Strona + tylko {reviews} opinii"
 
     return "POMIJAJ", ""
 
