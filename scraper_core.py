@@ -78,7 +78,7 @@ async def scrape_city(city: str, queries: list, seen: set, all_biz: list, label:
 
 async def run_scraper(region_keys: list, regions_config: dict,
                       base_queries: list, district_niches: list,
-                      country: str, label: str):
+                      country: str, label: str, max_total: int = 0):
     """
     Universal scraper loop.
     country: 'pl' | 'uk' | 'de'  — stored in Supabase leads.country
@@ -91,7 +91,8 @@ async def run_scraper(region_keys: list, regions_config: dict,
     all_biz: list[dict] = []
     seen:    set[str]   = set()
 
-    print(f"  Cel: {MAX_TOTAL} leadów na to uruchomienie")
+    limit = max_total or MAX_TOTAL
+    print(f"  Cel: {limit} leadów na to uruchomienie")
     base_queries = list(base_queries)
     random.shuffle(base_queries)
     district_niches = list(district_niches)
@@ -99,7 +100,7 @@ async def run_scraper(region_keys: list, regions_config: dict,
     print(f"  Kolejnosc zapytan: {base_queries[:5]}...")
 
     for region_key in region_keys:
-        if MAX_TOTAL and len(all_biz) >= MAX_TOTAL:
+        if limit and len(all_biz) >= limit:
             break
         if region_key not in regions_config:
             print(f"\n  [WARN] Nieznany region: '{region_key}'")
@@ -112,8 +113,8 @@ async def run_scraper(region_keys: list, regions_config: dict,
         print(f"{'=' * 50}")
 
         for city_name, districts in region["cities"]:
-            if MAX_TOTAL and len(all_biz) >= MAX_TOTAL:
-                print(f"\n  ✓ Osiagnieto cel {MAX_TOTAL} leadów — kończę scraping")
+            if limit and len(all_biz) >= limit:
+                print(f"\n  ✓ Osiagnieto cel {limit} leadów — kończę scraping")
                 break
             if districts:
                 queries = base_queries + [
@@ -126,7 +127,7 @@ async def run_scraper(region_keys: list, regions_config: dict,
 
             lbl = city_name[:3].upper()
             print(f"\n>>> {city_name.upper()} ({len(queries)} zapytan)")
-            await scrape_city(city_name, queries, seen, all_biz, lbl, max_total=MAX_TOTAL, country=country)
+            await scrape_city(city_name, queries, seen, all_biz, lbl, max_total=limit, country=country)
 
     all_biz.sort(key=lambda b: (
         PRIORITY_ORDER.get(b.get("priorytet", "POMIJAJ"), 99),

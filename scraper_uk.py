@@ -209,10 +209,11 @@ if __name__ == "__main__":
     cities_env  = os.environ.get("CITIES", "uk_london")
     region_keys = [k.strip() for k in cities_env.split(",") if k.strip()]
     asyncio.run(run_scraper(
-        region_keys    = region_keys,
-        regions_config = REGIONS,
-        base_queries   = BASE_QUERIES,
+        region_keys     = region_keys,
+        regions_config  = REGIONS,
+        base_queries    = BASE_QUERIES,
         district_niches = DISTRICT_NICHES,
-        country        = "uk",
-        label          = "United Kingdom",
+        country         = "uk",
+        label           = "United Kingdom",
+        max_total       = int(os.environ.get("MAX_LEADS", 60)),
     ))
