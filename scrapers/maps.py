@@ -9,7 +9,7 @@ from urllib.parse import quote
 from playwright.async_api import async_playwright
 
 
-async def scrape_google_maps(query: str, location: str, max_results: int = 50) -> list[dict]:
+async def scrape_google_maps(query: str, location: str, max_results: int = 50) -> list[dict]:  # noqa: C901
     search_term = f"{query} {location}".strip()
     search_url = f"https://www.google.com/maps/search/{quote(search_term)}"
 
@@ -94,7 +94,7 @@ async def scrape_google_maps(query: str, location: str, max_results: int = 50) -
                 if biz:
                     results.append(biz)
                     phone_str = biz.get("phone") or "brak tel."
-                    print(f"  [{len(results):>2}] {biz['name'][:40]:<40} {phone_str}")
+                    print(f"  [{len(results):>2}] {biz['name'][:35]:<35} {location:<15} {phone_str}")
             except Exception as e:
                 print(f"  [{i+1:>2}] Blad: {e}")
 
