@@ -215,5 +215,5 @@ if __name__ == "__main__":
         district_niches = DISTRICT_NICHES,
         country         = "uk",
         label           = "United Kingdom",
-        max_total       = int(os.environ.get("MAX_LEADS", 60)),
+        max_total       = int(os.environ.get("MAX_LEADS", 70)),
     ))

@@ -13,7 +13,7 @@ from supabase_sync import sync_leads
 MAX_PER_QUERY    = 30
 MAX_REVIEWS_HOT  = 10
 MAX_REVIEWS_WARM = 50
-MAX_TOTAL        = int(os.environ.get("MAX_LEADS", 108))  # limit leadów na jedno uruchomienie
+MAX_TOTAL        = int(os.environ.get("MAX_LEADS", 180))  # limit leadów na jedno uruchomienie
 
 PRIORITY_ORDER = {"GORACY": 0, "CIEPLY": 1, "POMIJAJ": 99}
 
